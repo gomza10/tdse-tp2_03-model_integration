@@ -79,6 +79,11 @@ extern "C" {
 #define BTN_D_PRESSED	GPIO_PIN_RESET
 #define BTN_D_HOVER		GPIO_PIN_SET
 
+#define BTN_E_PIN		B5_Pin
+#define BTN_E_PORT		B5_GPIO_Port
+#define BTN_E_PRESSED	GPIO_PIN_RESET
+#define BTN_E_HOVER		GPIO_PIN_SET
+
 #define LED_A_PIN		LD2_Pin
 #define LED_A_PORT		LD2_GPIO_Port
 #define LED_A_ON		GPIO_PIN_SET
