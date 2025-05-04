@@ -1,4 +1,46 @@
   task_sensor.c (task_sensor.h, task_sensor_attribute.h) 
    Non-Blocking & Update By Time Code -> Sensor Modeling
-  
-...
+
+En el archivo de atributos se define la siguiente información constructiva:
+- Eventos posibles para esta tarea
+- Estados posibles
+- ID de cada sensor.
+
+
+Se define la lista de configuración de los sensores. Allí se completa la información de hardware (pin, puerto, etc.), tiempos máximos, nivel de señal, etc
+typedef struct
+{
+	task_sensor_id_t	identifier;
+	GPIO_TypeDef *		gpio_port;
+	uint16_t			pin;
+	GPIO_PinState		pressed;
+	uint32_t			tick_max;
+	task_sensor_ev_t	signal_up;
+	task_sensor_ev_t	signal_down;
+} task_sensor_cfg_t;
+
+
+También se define la lista de datos de cada sensor. Allí se define un tick, event y state para cada sensor.
+typedef struct
+{
+	uint32_t			tick;
+	task_sensor_st_t	state;
+	task_sensor_ev_t	event;
+} task_sensor_dta_t;
+
+
+En la función task_sensor_init se recorre la lista de los datos de cada sensor y se inicializa junto con el contador de ticks
+
+
+En la función de update se sigue la siguiente secuencia:
+- Se recorre la lista de datos de cada sensor
+- Si el botón se encuentra presionado, se define que ocurre el evento "EV_BTN_XX_DOWN". Caso contrario ocurre "EV_BTN_XX_UP"
+- Se recorre el diagrama de estados definido para el sensor, verificando la ocurrencia de un evento (con su guarda si corresponde)
+	y asignando el estado de correspondiente al mismo junto con su acción
+
+Es interesante destacar que la acción del sensor de generar un evento en el system se realiza mediante la función "put_event_task_system"
+
+
+#NOTA GENÉRICA:
+En general, en el task_XXXX_update se utilizará la lista de configuración para tomar acciones sobre el hardware (indicar un evento si un botón se presiona o encender un led)
+y se utilizará la lista de datos para saber si ocurrieron los eventos y circular a través del statecharch

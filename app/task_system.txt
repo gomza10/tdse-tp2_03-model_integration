@@ -4,4 +4,35 @@
   task_system_interface.c (task_system_interface.h)
    Non-Blocking Code
 
-...
+…
+
+En el archivo de atributos se define la siguiente información constructiva:
+- Eventos posibles para esta tarea
+- Estados posibles
+
+
+También se define la lista de datos del sistema (que en este caso solo tiene un system). Se define un tick, event, state y una flag booleana que permite indicar si ocurrió un evento.
+typedef struct
+{
+	uint32_t		tick;
+	task_system_st_t	state;
+	task_system_ev_t	event;
+	bool			flag;
+} task_system_dta_t;
+
+
+El system tiene una lógica de cola de eventos que consta de 4 funciones:
+- void init_queue_event_task_system(void) 		-> inicializa la cola de eventos
+- void put_event_task_system(task_system_ev_t event) 	-> permite ingresar un evento a la cola
+- task_system_ev_t get_event_task_system(void) 		-> permite obtener un evento
+- bool any_event_task_system(void) 			-> permite conocer si ocurrió un evento
+
+
+En la función task_system_init se inicializa la cola de eventos junto con el contador de ticks
+
+En la función de update se sigue la siguiente secuencia:
+- Se verifica si ocurrió un evento mediante la función correspondiente. En tal caso se levanta de flag de la lista de datos del system y se obtiene el evento que ocurrió
+- Se recorre el diagrama de estados definido para el system, verificando la ocurrencia de un evento (con su guarda si corresponde)
+	y asignando el estado de correspondiente al mismo, junto con su acción
+
+Es importante destacar que en los casos en donde una acción del system corresponde a un evento de actuador, se utiliza la función "put_event_task_actuator".
