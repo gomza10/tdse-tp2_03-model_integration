@@ -95,7 +95,8 @@ typedef enum task_sensor_st {ST_BTN_XX_UP,
 typedef enum task_sensor_id {ID_BTN_A,
 							ID_BTN_B,
 							ID_BTN_C,
-							ID_BTN_D} task_sensor_id_t;
+							ID_BTN_D,
+							ID_BTN_E} task_sensor_id_t;
 
 typedef struct
 {
